@@ -6,7 +6,7 @@ abstract class ScheduleDatasorource {
   Future<void> delete(String day);
   Future<void> edit();
   Future<void> canceled(String reason, int index, String day);
-  Future<List<ScheduleModel>> load();
+  Future<List<ScheduleModel>> load(String day);
 }
 
 class ScheduleImplementedDatasource implements ScheduleDatasorource {
@@ -56,8 +56,16 @@ class ScheduleImplementedDatasource implements ScheduleDatasorource {
   }
 
   @override
-  Future<List<ScheduleModel>> load() {
-    // TODO: implement load
-    throw UnimplementedError();
+  Future<List<ScheduleModel>> load(String day) async {
+    final firestore = FirebaseFirestore.instance;
+    // final snapshot = await firestore.collection('days').get();
+    // або .doc(day).get(), залежно від того, чи load() для одного дня чи всіх
+
+    // приклад для одного дня:
+    final doc = await firestore.collection('days').doc(day).get();
+    final data = doc.data();
+    return (data?['schedule'] as List<dynamic>? ?? [])
+        .map((e) => ScheduleModel.fromMap(e as Map<String, dynamic>))
+        .toList();
   }
 }

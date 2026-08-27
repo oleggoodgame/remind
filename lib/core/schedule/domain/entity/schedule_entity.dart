@@ -1,11 +1,11 @@
 class ScheduleEntity {
   final int index;
-  final String time;
+  final String? time;
   final String description;
-  String? reason;
-  ScheduleEntity({
+  final String? reason;
+  const ScheduleEntity({
     required this.index,
-    required this.time,
+    this.time,
     required this.description,
     this.reason,
   });
@@ -32,19 +32,18 @@ class ScheduleEntity {
   @override
   bool operator ==(covariant ScheduleEntity other) {
     if (identical(this, other)) return true;
-  
-    return 
-      other.index == index &&
-      other.time == time &&
-      other.description == description &&
-      other.reason == reason;
+
+    return other.index == index &&
+        other.time == time &&
+        other.description == description &&
+        other.reason == reason;
   }
 
   @override
   int get hashCode {
     return index.hashCode ^
-      time.hashCode ^
-      description.hashCode ^
-      reason.hashCode;
+        time.hashCode ^
+        description.hashCode ^
+        reason.hashCode;
   }
 }

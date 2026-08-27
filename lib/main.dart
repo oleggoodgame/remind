@@ -1,11 +1,15 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:remind/core/schedule/presentation/bloc/schedule_bloc.dart';
+import 'package:remind/core/schedule/presentation/screen/week_screen.dart';
 import 'package:remind/firebase_options.dart';
+import 'package:remind/injections/service_locator.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await ServiceLocator().init();
+  await ServiceLocator().init();
   runApp(const MainApp());
 }
 
@@ -14,12 +18,11 @@ class MainApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const MaterialApp(
-      home: Scaffold(
-        body: Center(
-          child: Text('Hello World!'),
-        ),
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => ScheduleBloc(scheduleRepository: getIt())),
+      ],
+      child: MaterialApp(home: WeekScreen()),
     );
   }
 }
