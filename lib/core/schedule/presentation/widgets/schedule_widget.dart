@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:remind/common/widgets/text_widget.dart';
 import 'package:remind/core/schedule/domain/entity/schedule_entity.dart';
 import 'package:remind/core/schedule/presentation/bloc/schedule_bloc.dart';
 
@@ -40,31 +41,62 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        isEditing
-            ? TextField(
-                cursorColor: Colors.black,
-                decoration: InputDecoration(fillColor: Colors.grey),
-                focusNode: focusNode,
-                controller: textEditingController,
-                onSubmitted: (value) {
-                  setState(() {
-                    text = textEditingController.text;
-                    isEditing = false;
-                  });
-                  context.read<ScheduleBloc>().add(
-                    AddToSchedule(
-                      index: widget.scheduleEntity.index,
-                      description: text,
-                      day: DateTime.now().toString(),
-                      time: '',
+    return Padding(
+      padding: const EdgeInsetsGeometry.symmetric(vertical: 16, horizontal: 20),
+      child: Stack(
+        children: [
+          isEditing
+              ? Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    cursorColor: Colors.black,
+                    decoration: InputDecoration(
+                      
+                      filled: true,
+                      fillColor: Colors.grey,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: BorderSide(color: Colors.grey.shade400),
+                      ),
+                      focusedBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(
+                          color: Colors.white,
+                          width: 2,
+                        ),
+                      ),
+                      errorBorder: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(12),
+                        borderSide: const BorderSide(color: Colors.red),
+                      ),
                     ),
-                  );
-                },
-              )
-            : Text(text),
-      ],
+                    focusNode: focusNode,
+                    controller: textEditingController,
+                    onSubmitted: (value) {
+                      setState(() {
+                        text = textEditingController.text;
+                        isEditing = false;
+                      });
+                      context.read<ScheduleBloc>().add(
+                        AddToSchedule(
+                          index: widget.scheduleEntity.index,
+                          description: text,
+                          day: DateTime.now().toString(),
+                          time: '',
+                        ),
+                      );
+                    },
+                  ),
+                )
+              : Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextWidget(text: text),
+                ),
+        ],
+      ),
     );
   }
 }

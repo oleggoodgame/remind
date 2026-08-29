@@ -20,6 +20,7 @@ class _WeekScreenState extends State<WeekScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
         actions: [
           IconButton(
@@ -31,7 +32,7 @@ class _WeekScreenState extends State<WeekScreen> {
           ),
         ],
       ),
-      body: ListScheduleWidget(),
+      body: Column(children: [SizedBox(height: 300), ListScheduleWidget()]),
     );
   }
 }
