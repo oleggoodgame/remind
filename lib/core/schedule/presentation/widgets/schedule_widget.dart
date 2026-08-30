@@ -85,8 +85,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                       final weekState = context.read<WeekBloc>().state;
                       final day = weekState is WeekLoaded
                           ? weekState.selectedDay.toString()
-                          : DateTime.now()
-                                .toString(); // fallback про всяк випадок
+                          : DateTime.now().toString();
 
                       context.read<ScheduleBloc>().add(
                         AddToSchedule(
@@ -99,10 +98,18 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                     },
                   ),
                 )
-              : Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: TextWidget(text: text),
-                ),
+              : Expanded(
+                child: Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+                    child: Container(
+                      
+                      decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white, width: 3),
+                      ),
+                      child: TextWidget(text: text),
+                    ),
+                  ),
+              ),
         ],
       ),
     );
