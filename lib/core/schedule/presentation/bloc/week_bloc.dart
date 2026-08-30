@@ -17,7 +17,10 @@ class WeekBloc extends Bloc<WeekEvent, WeekState> {
   }
 
   int _week = 0;
-  DateTime _selectedDay = DateTime.now();
+  DateTime _selectedDay = () {
+    final now = DateTime.now();
+    return DateTime(now.year, now.month, now.day);
+  }();
 
   DateTime get _mondayOfCurrentWeek {
     final now = DateTime.now();
@@ -81,7 +84,7 @@ class WeekBloc extends Bloc<WeekEvent, WeekState> {
   }
 
   Future<void> _onSelectDay(SelectDay event, Emitter<WeekState> emit) async {
-    _selectedDay = event.day;
+    _selectedDay = DateTime(event.day.year, event.day.month, event.day.day);
     _emitLoaded(emit);
   }
 }

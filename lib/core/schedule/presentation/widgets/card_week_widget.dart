@@ -14,7 +14,7 @@ class CardWeekWidget extends StatelessWidget {
     return Container(
       width: 60,
       height: 60,
-      margin: EdgeInsetsDirectional.symmetric(horizontal: 8),
+      margin: EdgeInsetsDirectional.symmetric(horizontal: 6),
       decoration: BoxDecoration(
         color: color,
         borderRadius: BorderRadius.circular(6.5),
@@ -41,8 +41,8 @@ class CardWeekWidget extends StatelessWidget {
                   ),
           ),
           isDark
-              ? Text(name, style: const TextStyle(color: Colors.white))
-              : Text(name, style: const TextStyle(color: Colors.black)),
+              ? Text(name.substring(0,4), style: const TextStyle(color: Colors.white))
+              : Text(name.substring(0,4), style: const TextStyle(color: Colors.black)),
         ],
       ),
     );

@@ -12,10 +12,16 @@ abstract class ScheduleDatasorource {
 class ScheduleImplementedDatasource implements ScheduleDatasorource {
   @override
   Future<void> add(ScheduleModel scheduleModel, String day) async {
-    final firestore = FirebaseFirestore.instance;
-    await firestore.collection('days').doc(day).set({
-      'schedule': FieldValue.arrayUnion([scheduleModel.toMap()]),
-    }, SetOptions(merge: true));
+    try {
+      print("Викликали базу даних: ДАНІ: ${scheduleModel.toString()}, ${day}");
+      final firestore = FirebaseFirestore.instance;
+      await firestore.collection('days').doc(day).set({
+        'schedule': FieldValue.arrayUnion([scheduleModel.toMap()]),
+      }, SetOptions(merge: true));
+    } catch (e) {
+      print(e.toString());
+      print("сталась помилка");
+    }
   }
 
   @override
@@ -57,15 +63,21 @@ class ScheduleImplementedDatasource implements ScheduleDatasorource {
 
   @override
   Future<List<ScheduleModel>> load(String day) async {
-    final firestore = FirebaseFirestore.instance;
-    // final snapshot = await firestore.collection('days').get();
-    // або .doc(day).get(), залежно від того, чи load() для одного дня чи всіх
+    try {
+      final firestore = FirebaseFirestore.instance;
+      // final snapshot = await firestore.collection('days').get();
+      // або .doc(day).get(), залежно від того, чи load() для одного дня чи всіх
 
-    // приклад для одного дня:
-    final doc = await firestore.collection('days').doc(day).get();
-    final data = doc.data();
-    return (data?['schedule'] as List<dynamic>? ?? [])
-        .map((e) => ScheduleModel.fromMap(e as Map<String, dynamic>))
-        .toList();
+      // приклад для одного дня:
+      final doc = await firestore.collection('days').doc(day).get();
+      final data = doc.data();
+      return (data?['schedule'] as List<dynamic>? ?? [])
+          .map((e) => ScheduleModel.fromMap(e as Map<String, dynamic>))
+          .toList();
+    } catch (e) {
+      print(e.toString());
+      print("Српацювала помилка ");
+      throw Exception('');
+    }
   }
 }

@@ -12,6 +12,7 @@ class ScheduleImplementRepository implements ScheduleRepository {
       final ScheduleModel scheduleModel = ScheduleModel.fromEntity(
         scheduleEntity,
       );
+      print("Викликали репозиторій");
       await scheduleDatasorource.add(scheduleModel, day);
     } catch (e) {}
   }
@@ -34,6 +35,9 @@ class ScheduleImplementRepository implements ScheduleRepository {
 
   @override
   Future<List<ScheduleEntity>> load(String day) async {
+    
+    final list = await scheduleDatasorource.load(day);
+    print("${list.toString()}");
     return await scheduleDatasorource.load(day);
   }
 }

@@ -10,7 +10,11 @@ class ScheduleModel extends ScheduleEntity {
     super.reason,
   });
   Map<String, dynamic> toMap() {
-    return <String, dynamic>{'time': time, 'description': description};
+    return <String, dynamic>{
+      'time': time,
+      'description': description,
+      'index': index,
+    };
   }
 
   factory ScheduleModel.fromMap(Map<String, dynamic> map) {
@@ -18,7 +22,7 @@ class ScheduleModel extends ScheduleEntity {
       time: map['time'] as String,
       description: map['description'] as String,
       index: map['index'] as int,
-      reason: map['reason'] as String,
+      // reason: map['reason'] as String,
     );
   }
 
@@ -32,7 +36,7 @@ class ScheduleModel extends ScheduleEntity {
       time: scheduleEntity.time,
       description: scheduleEntity.description,
       index: scheduleEntity.index,
-      reason: scheduleEntity.reason
+      reason: scheduleEntity.reason,
     );
   }
 }

@@ -23,8 +23,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
   ) async {
     emit(ScheduleLoading());
     try {
-      final schedules = await scheduleRepository.load(DateTime.now().toString());
+      final schedules = await scheduleRepository.load(event.day);
       print("Load Schedule");
+      print(schedules);
       emit(ScheduleLoaded(schedules: schedules));
     } catch (e) {
       emit(ScheduleError(message: e.toString()));
@@ -36,6 +37,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     Emitter<ScheduleState> emit,
   ) async {
     try {
+      print("Починаємо додавати SCHEDULE");
       final ScheduleEntity scheduleEntity = ScheduleEntity(
         index: event.index,
         time: event.time,
@@ -51,8 +53,8 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
               : s;
         }).toList();
         emit(ScheduleLoaded(schedules: updated));
+        print("Загрузив Schdule");
       }
-
     } catch (e) {
       emit(ScheduleError(message: e.toString()));
     }
@@ -100,7 +102,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     emit(ScheduleLoading());
 
     try {
-      final schedules = await scheduleRepository.load(DateTime.now().toString());
+      final schedules = await scheduleRepository.load(
+        DateTime.now().toString(),
+      ); // не добре трохи
       emit(ScheduleLoaded(schedules: schedules));
     } catch (e) {
       emit(ScheduleError(message: e.toString()));

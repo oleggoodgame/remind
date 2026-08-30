@@ -3,6 +3,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind/common/widgets/text_widget.dart';
 import 'package:remind/core/schedule/domain/entity/schedule_entity.dart';
 import 'package:remind/core/schedule/presentation/bloc/schedule_bloc.dart';
+import 'package:remind/core/schedule/presentation/bloc/week_bloc.dart';
 
 class ScheduleWidget extends StatefulWidget {
   const ScheduleWidget({
@@ -21,7 +22,7 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
   late final FocusNode focusNode;
   late bool isEditing;
   String text = "";
-
+  String day = "";
   @override
   void initState() {
     super.initState();
@@ -36,6 +37,8 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         focusNode.requestFocus();
       });
+    } else {
+      text = widget.scheduleEntity.description;
     }
   }
 
@@ -51,7 +54,6 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                   child: TextField(
                     cursorColor: Colors.black,
                     decoration: InputDecoration(
-                      
                       filled: true,
                       fillColor: Colors.grey,
                       border: OutlineInputBorder(
@@ -80,11 +82,17 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                         text = textEditingController.text;
                         isEditing = false;
                       });
+                      final weekState = context.read<WeekBloc>().state;
+                      final day = weekState is WeekLoaded
+                          ? weekState.selectedDay.toString()
+                          : DateTime.now()
+                                .toString(); // fallback про всяк випадок
+
                       context.read<ScheduleBloc>().add(
                         AddToSchedule(
                           index: widget.scheduleEntity.index,
                           description: text,
-                          day: DateTime.now().toString(),
+                          day: day,
                           time: '',
                         ),
                       );

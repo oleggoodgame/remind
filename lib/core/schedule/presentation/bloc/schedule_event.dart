@@ -1,4 +1,3 @@
-// ignore_for_file: public_member_api_docs, sort_constructors_first
 part of 'schedule_bloc.dart';
 
 abstract class ScheduleEvent {}
@@ -38,4 +37,7 @@ class CanceledSchedule extends ScheduleEvent {
   });
 }
 
-class LoadSchedule extends ScheduleEvent {}
+class LoadSchedule extends ScheduleEvent {
+  final String day;
+  LoadSchedule({required this.day});
+}

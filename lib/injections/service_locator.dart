@@ -3,6 +3,7 @@ import 'package:remind/core/schedule/data/datasource/schedule_datasorource.dart'
 import 'package:remind/core/schedule/data/repository/schedule_implement_repository.dart';
 import 'package:remind/core/schedule/domain/repository/schedule_repository.dart';
 import 'package:remind/core/schedule/presentation/bloc/schedule_bloc.dart';
+import 'package:remind/core/schedule/presentation/bloc/week_bloc.dart';
 
 final GetIt getIt = GetIt.instance;
 
@@ -16,6 +17,9 @@ class ServiceLocator {
     );
     getIt.registerFactory<ScheduleBloc>(
       () => ScheduleBloc(scheduleRepository: getIt()),
+    );
+    getIt.registerFactory<WeekBloc>(
+      () => WeekBloc(),
     );
   }
 }

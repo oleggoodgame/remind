@@ -6,6 +6,6 @@ class TextWidget extends StatelessWidget {
   final String text;
   @override
   Widget build(BuildContext context) {
-    return Text(text, style: GoogleFonts.roboto(color:Colors.black, fontSize: 16),);
+    return Text(text, style: GoogleFonts.roboto(color:Colors.white, fontSize: 16),);
   }
 }

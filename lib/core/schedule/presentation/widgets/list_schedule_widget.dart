@@ -14,19 +14,21 @@ class ListScheduleWidget extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is ScheduleLoaded) {
-          return ListView.builder(
-            itemCount: state.schedules.length,
-            itemBuilder: (context, index) {
-              final schedule = state.schedules[index];
-              final isNew = schedule
-                  .description
-                  .isEmpty;
-              return ScheduleWidget(
-                key: ValueKey(schedule.index), // ← дуже важливо, дивись пункт 4
-                scheduleEntity: schedule,
-                created: isNew,
-              );
-            },
+          return Expanded(
+            child: ListView.builder(
+              itemCount: state.schedules.length,
+              itemBuilder: (context, index) {
+                final schedule = state.schedules[index];
+                final isNew = schedule
+                    .description
+                    .isEmpty;
+                return ScheduleWidget(
+                  key: ValueKey(schedule.index), 
+                  scheduleEntity: schedule,
+                  created: isNew,
+                );
+              },
+            ),
           );
         }
         if (state is ScheduleError) {

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:remind/core/schedule/presentation/widgets/card_week_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:remind/core/schedule/presentation/bloc/week_bloc.dart';
@@ -8,7 +9,7 @@ class WeekWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
+    // final isDark = Theme.of(context).brightness == Brightness.dark;
 
     return BlocBuilder<WeekBloc, WeekState>(
       builder: (context, state) {
@@ -34,21 +35,27 @@ class WeekWidget extends StatelessWidget {
                           context.read<WeekBloc>().add(MinusWeek()),
                       icon: const Icon(Icons.arrow_left_sharp),
                       iconSize: 40,
+                      color: Colors.white,
                     ),
                   ),
-                  Center(
+                  Align(
+                    alignment: Alignment.bottomCenter,
                     child: Text(
                       loaded.month,
-                      style: Theme.of(context).textTheme.titleLarge,
+                      style: GoogleFonts.nokora(
+                        color: Colors.white,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500
+                      ),
                     ),
                   ),
                   Align(
                     alignment: Alignment.bottomRight,
                     child: IconButton(
-                      onPressed: () =>
-                          context.read<WeekBloc>().add(PlusWeek()),
+                      onPressed: () => context.read<WeekBloc>().add(PlusWeek()),
                       icon: const Icon(Icons.arrow_right_sharp),
                       iconSize: 40,
+                      color: Colors.white,
                     ),
                   ),
                 ],
@@ -64,13 +71,13 @@ class WeekWidget extends StatelessWidget {
                   final isSelected = loaded.selectedDay == week.day;
                   final Color displayColor;
                   if (isSelected) {
-                    displayColor = isDark
-                        ? Colors.blueGrey.shade600
-                        : Colors.blueGrey.shade900;
+                    displayColor = 
+                         const Color.fromARGB(255, 182, 219, 236);
+                        
                   } else if (week.color != null) {
                     displayColor = week.color!;
                   } else {
-                    displayColor = isDark ? Colors.black : Colors.white;
+                    displayColor = Colors.white;
                   }
 
                   return GestureDetector(
