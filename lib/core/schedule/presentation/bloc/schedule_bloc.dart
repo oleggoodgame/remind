@@ -15,6 +15,9 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     on<DeleteShedule>(_onDeleteSchedule);
     on<CanceledSchedule>(_onCanceledSchedule);
     on<NewSchedule>(_onNewSchedule);
+    on<EditSchedule>(_onEditScedule);
+    on<StartEditing>(_onStartEditing);
+    on<CompleteSchedule>(_onCompleteSchedule);
   }
 
   Future<void> _onLoadSchedule(
@@ -52,8 +55,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
               ? s.copyWith(description: event.description, time: event.time)
               : s;
         }).toList();
-        emit(ScheduleLoaded(schedules: updated));
-        print("Загрузив Schdule");
+        emit(ScheduleLoaded(schedules: updated, editingIndex: null));
       }
     } catch (e) {
       emit(ScheduleError(message: e.toString()));
@@ -102,10 +104,56 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     emit(ScheduleLoading());
 
     try {
-      final schedules = await scheduleRepository.load(
-        DateTime.now().toString(),
-      ); // не добре трохи
+      await scheduleRepository.canceled(event.reason, event.index, event.day);
+      final schedules = await scheduleRepository.load(event.day);
       emit(ScheduleLoaded(schedules: schedules));
+    } catch (e) {
+      emit(ScheduleError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onEditScedule(
+    EditSchedule event,
+    Emitter<ScheduleState> emit,
+  ) async {
+    emit(ScheduleLoading());
+
+    try {
+      await scheduleRepository.edit(event.description, event.index, event.day);
+      final schedules = await scheduleRepository.load(event.day);
+      emit(ScheduleLoaded(schedules: schedules));
+    } catch (e) {
+      emit(ScheduleError(message: e.toString()));
+    }
+  }
+
+  Future<void> _onStartEditing(
+    StartEditing event,
+    Emitter<ScheduleState> emit,
+  ) async {
+    final current = state;
+    if (current is ScheduleLoaded) {
+      emit(
+        ScheduleLoaded(schedules: current.schedules, editingIndex: event.index),
+      );
+    }
+  }
+
+  Future<void> _onCompleteSchedule(
+    CompleteSchedule event,
+    Emitter<ScheduleState> emit,
+  ) async {
+    try {
+      final time = await scheduleRepository.complete(event.day, event.index);
+      final current = state;
+      if (current is ScheduleLoaded) {
+        final updated = current.schedules.map((s) {
+          return s.index == event.index ? s.copyWith(time: time) : s;
+        }).toList();
+        emit(
+          ScheduleLoaded(schedules: updated),
+        ); // ← ось це і робить UI миттєвим
+      }
     } catch (e) {
       emit(ScheduleError(message: e.toString()));
     }

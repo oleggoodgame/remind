@@ -37,7 +37,29 @@ class CanceledSchedule extends ScheduleEvent {
   });
 }
 
+class EditSchedule extends ScheduleEvent {
+  final String description;
+  final String day;
+  final int index;
+  EditSchedule({
+    required this.description,
+    required this.day,
+    required this.index,
+  });
+}
+
 class LoadSchedule extends ScheduleEvent {
   final String day;
   LoadSchedule({required this.day});
+}
+
+class StartEditing extends ScheduleEvent {
+  final int index;
+  StartEditing({required this.index});
+}
+
+class CompleteSchedule extends ScheduleEvent {
+  final String day;
+  final int index;
+  CompleteSchedule({required this.index, required this.day});
 }

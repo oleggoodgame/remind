@@ -26,37 +26,31 @@ class WeekWidget extends StatelessWidget {
           children: [
             Padding(
               padding: const EdgeInsets.only(bottom: 10),
-              child: Stack(
+              child: Row(
                 children: [
-                  Align(
-                    alignment: Alignment.bottomLeft,
-                    child: IconButton(
-                      onPressed: () =>
-                          context.read<WeekBloc>().add(MinusWeek()),
-                      icon: const Icon(Icons.arrow_left_sharp),
-                      iconSize: 40,
-                      color: Colors.white,
-                    ),
+                  IconButton(
+                    onPressed: () => context.read<WeekBloc>().add(MinusWeek()),
+                    color: Colors.white,
+                    icon: Icon(Icons.arrow_left_sharp),
+                    iconSize: 40,
                   ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
+                  Spacer(),
+                  Center(
                     child: Text(
                       loaded.month,
                       style: GoogleFonts.nokora(
                         color: Colors.white,
                         fontSize: 16,
-                        fontWeight: FontWeight.w500
+                        fontWeight: FontWeight.w500,
                       ),
                     ),
                   ),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: IconButton(
-                      onPressed: () => context.read<WeekBloc>().add(PlusWeek()),
-                      icon: const Icon(Icons.arrow_right_sharp),
-                      iconSize: 40,
-                      color: Colors.white,
-                    ),
+                  Spacer(),
+                  IconButton(
+                    onPressed: () => context.read<WeekBloc>().add(PlusWeek()),
+                    color: Colors.white,
+                    icon: Icon(Icons.arrow_right_sharp),
+                    iconSize: 40,
                   ),
                 ],
               ),
@@ -71,9 +65,7 @@ class WeekWidget extends StatelessWidget {
                   final isSelected = loaded.selectedDay == week.day;
                   final Color displayColor;
                   if (isSelected) {
-                    displayColor = 
-                         const Color.fromARGB(255, 182, 219, 236);
-                        
+                    displayColor = const Color.fromARGB(255, 182, 219, 236);
                   } else if (week.color != null) {
                     displayColor = week.color!;
                   } else {

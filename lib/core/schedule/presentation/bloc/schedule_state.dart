@@ -8,7 +8,8 @@ class ScheduleLoading extends ScheduleState {}
 
 class ScheduleLoaded extends ScheduleState {
   final List<ScheduleEntity> schedules;
-  ScheduleLoaded({required this.schedules});
+  final int? editingIndex; 
+  ScheduleLoaded({required this.schedules, this.editingIndex});
 }
 
 class ScheduleError extends ScheduleState {
