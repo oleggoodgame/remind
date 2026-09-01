@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:remind/common/widgets/text_widget.dart';
 import 'package:remind/core/schedule/domain/entity/schedule_entity.dart';
 import 'package:remind/core/schedule/presentation/bloc/schedule_bloc.dart';
@@ -131,7 +132,25 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                         border: Border.all(color: Colors.white, width: 2),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
-                      child: TextWidget(text: text),
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            left: 0,
+                            child: widget.scheduleEntity.reason == null
+                                ? TextWidget(text: text)
+                                : Row(children: [TextWidget(text: text), Text(widget.scheduleEntity.reason!, style: TextStyle(color: Colors.red.shade200),)]),
+                          ),
+                          Positioned(
+                            child: Text(
+                              widget.scheduleEntity.time ?? "",
+                              style: GoogleFonts.roboto(
+                                color: Colors.white,
+                                fontSize: 12,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
             ],
           ),

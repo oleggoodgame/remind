@@ -85,10 +85,6 @@ class ScheduleImplementedDatasource implements ScheduleDatasorource {
   Future<List<ScheduleModel>> load(String day) async {
     try {
       final firestore = FirebaseFirestore.instance;
-      // final snapshot = await firestore.collection('days').get();
-      // або .doc(day).get(), залежно від того, чи load() для одного дня чи всіх
-
-      // приклад для одного дня:
       final doc = await firestore.collection('days').doc(day).get();
       final data = doc.data();
       return (data?['schedule'] as List<dynamic>? ?? [])
