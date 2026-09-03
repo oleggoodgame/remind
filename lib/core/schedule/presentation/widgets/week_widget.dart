@@ -40,7 +40,7 @@ class WeekWidget extends StatelessWidget {
                       loaded.month,
                       style: GoogleFonts.nokora(
                         color: Colors.white,
-                        fontSize: 16,
+                        fontSize: 24,
                         fontWeight: FontWeight.w500,
                       ),
                     ),

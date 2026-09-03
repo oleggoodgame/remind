@@ -26,7 +26,6 @@ class _WeekScreenState extends State<WeekScreen> {
     context.read<WeekBloc>().add(SelectDay(day: todayDateOnly));
   }
 
-  // week_screen.dart
   @override
   Widget build(BuildContext context) {
     return BlocListener<WeekBloc, WeekState>(
@@ -46,8 +45,12 @@ class _WeekScreenState extends State<WeekScreen> {
       child: Scaffold(
         backgroundColor: Colors.black,
         appBar: AppBar(
+          backgroundColor: const Color.fromARGB(235, 10, 10, 10),
           actions: [
-            IconButton(
+            IconButton.outlined(
+              splashRadius: 15,
+              color: Colors.white,
+              style: ButtonStyle(),
               onPressed: () => context.read<ScheduleBloc>().add(NewSchedule()),
               icon: const Icon(Icons.add),
             ),

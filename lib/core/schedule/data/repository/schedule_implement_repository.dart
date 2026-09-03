@@ -28,9 +28,9 @@ class ScheduleImplementRepository implements ScheduleRepository {
   }
 
   @override
-  Future<void> delete(String day) async {
+  Future<void> delete(String day, int index) async {
     try {
-      await scheduleDatasorource.delete(day);
+      await scheduleDatasorource.delete(day, index);
     } catch (e) {
       print("Сталась помилка ");
       print(e.toString());

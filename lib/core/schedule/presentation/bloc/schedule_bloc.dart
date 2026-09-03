@@ -67,7 +67,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
     Emitter<ScheduleState> emit,
   ) async {
     try {
-      await scheduleRepository.delete(event.day);
+      await scheduleRepository.delete(event.day, event.index);
       final current = state;
       if (current is ScheduleLoaded) {
         current.schedules.removeWhere(

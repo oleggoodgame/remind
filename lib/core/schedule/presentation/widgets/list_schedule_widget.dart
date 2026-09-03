@@ -19,135 +19,159 @@ class _ListScheduleWidgetState extends State<ListScheduleWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ScheduleBloc, ScheduleState>(
-      builder: (context, state) {
-        if (state is ScheduleLoading) {
-          return const Center(child: CircularProgressIndicator());
-        }
-        if (state is ScheduleLoaded) {
-          return Expanded(
-            child: ListView.builder(
-              itemCount: state.schedules.length,
-              itemBuilder: (context, index) {
-                final schedule = state.schedules[index];
-                final isNew = schedule.description.isEmpty;
-                final weekState = context.read<WeekBloc>().state;
-                final day = weekState is WeekLoaded
-                    ? weekState.selectedDay.toString()
-                    : DateTime.now().toString();
-
-                return GestureDetector(
-                  onHorizontalDragEnd: (details) {
-                    if (details.velocity.pixelsPerSecond.dx < 0) {
-                      setState(() => showActions = false);
-                    } else {
-                      setState(() => showActions = true);
-                    }
-                  },
-                  onTap: () => setState(() => showActions = !showActions),
-                  child: Stack(
-                    children: [
-                      AnimatedContainer(
-                        duration: const Duration(milliseconds: 300),
-                        transform: Matrix4.translationValues(
-                          showActions
-                              ? ((widgetsCount.toDouble() * 80))
-                              : 0, //-
-                          0,
-                          0,
-                        ),
-                        child: Row(
-                          children: [
-                            SizedBox(
-                              height: 80,
-                              width: 80,
-                              child: Center(
-                                child: Text(
-                                  "${++index}",
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ),
-                            ),
-                            Expanded(
-                              child: ScheduleWidget(
-                                key: ValueKey(schedule.index),
-                                scheduleEntity: schedule,
-                                created: isNew,
-                              ),
-                            ),
-                          ],
-                        ),
-                      ),
-                      if (showActions)
-                        Padding(
-                          padding: const EdgeInsetsGeometry.symmetric(
-                            vertical: 16,
-                            horizontal: 20,
-                          ),
-                          child: SizedBox(
-                            width: widgetsCount.toDouble() * 80,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                              children: [
-                                CircleButtonWidget(
-                                  color: Colors.redAccent.shade400,
-                                  icon: Icons.delete,
-                                  onPressed: () {
-                                    context.read<ScheduleBloc>().add(
-                                      DeleteShedule(day: day, index: index),
-                                    );
-                                  },
-                                ),
-                                CircleButtonWidget(
-                                  color: Colors.redAccent.shade100,
-                                  icon: Icons.remove,
-                                  onPressed: () {
-                                    _showDialog(
-                                      context,
-                                      "Why u didin't do it?",
-                                      day,
-                                      index,
-                                    );
-                                  },
-                                ),
-                                CircleButtonWidget(
-                                  color: Colors.grey,
-                                  icon: Icons.edit,
-                                  onPressed: () {
-                                    context.read<ScheduleBloc>().add(
-                                      StartEditing(index: schedule.index),
-                                    );
-                                  },
-                                ),
-                                CircleButtonWidget(
-                                  color: Colors.green.shade400,
-                                  icon: Icons.edit,
-                                  onPressed: () {
-                                    context.read<ScheduleBloc>().add(
-                                      CompleteSchedule(day: day, index: index),
-                                    );
-                                  },
-                                ),
-                              ],
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                );
-              },
+    return BlocListener<ScheduleBloc, ScheduleState>(
+      listener: (context, state) {
+        if (state is ScheduleError) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(state.message),
+              duration: const Duration(seconds: 3),
             ),
           );
         }
-        if (state is ScheduleError) {
-          return Text('Помилка: ${state.message}');
-        }
-        return const Center(child: Text("There is Noting"));
       },
+      child: BlocBuilder<ScheduleBloc, ScheduleState>(
+        builder: (context, state) {
+          // if (state is ScheduleLoading) {
+          //   return const Center(child: CircularProgressIndicator());
+          // }
+          if (state is ScheduleLoaded) {
+            return Expanded(
+              child: ListView.builder(
+                itemCount: state.schedules.length,
+                itemBuilder: (context, index) {
+                  final schedule = state.schedules[index];
+                  final isNew = schedule.description.isEmpty;
+                  final weekState = context.read<WeekBloc>().state;
+                  final day = weekState is WeekLoaded
+                      ? weekState.selectedDay.toString()
+                      : DateTime.now().toString();
+
+                  return GestureDetector(
+                    onHorizontalDragEnd: (details) {
+                      if (details.velocity.pixelsPerSecond.dx < 0) {
+                        setState(() => showActions = false);
+                      } else {
+                        setState(() => showActions = true);
+                      }
+                    },
+                    onTap: () => setState(() => showActions = !showActions),
+                    child: Stack(
+                      children: [
+                        AnimatedContainer(
+                          duration: const Duration(milliseconds: 300),
+                          transform: Matrix4.translationValues(
+                            showActions
+                                ? ((widgetsCount.toDouble() * 80))
+                                : 0, //-
+                            0,
+                            0,
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: 80,
+                                width: 80,
+                                child: Center(
+                                  child: Text(
+                                    "${index + 1}",
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Expanded(
+                                child: ScheduleWidget(
+                                  key: ValueKey(schedule.index),
+                                  scheduleEntity: schedule,
+                                  created: isNew,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        if (showActions)
+                          Padding(
+                            padding: const EdgeInsetsGeometry.symmetric(
+                              vertical: 16,
+                              horizontal: 20,
+                            ),
+                            child: SizedBox(
+                              width: widgetsCount.toDouble() * 80,
+                              child: Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  CircleButtonWidget(
+                                    color: Colors.redAccent.shade400,
+                                    icon: Icons.delete,
+                                    onPressed: () {
+                                      context.read<ScheduleBloc>().add(
+                                        DeleteShedule(day: day, index: index),
+                                      );
+                                      showActions = false;
+                                    },
+                                  ),
+                                  CircleButtonWidget(
+                                    color: Colors.redAccent.shade100,
+                                    icon: Icons.remove,
+                                    onPressed: () {
+                                      _showDialog(
+                                        context,
+                                        "Why u didin't do it?",
+                                        day,
+                                        index,
+                                      );
+                                    },
+                                  ),
+                                  CircleButtonWidget(
+                                    color: Colors.grey,
+                                    icon: Icons.edit,
+                                    onPressed: () {
+                                      context.read<ScheduleBloc>().add(
+                                        StartEditing(index: schedule.index),
+                                      );
+                                      showActions = false;
+                                    },
+                                  ),
+                                  CircleButtonWidget(
+                                    color: Colors.green.shade400,
+                                    icon: Icons.check,
+                                    onPressed: () {
+                                      context.read<ScheduleBloc>().add(
+                                        CompleteSchedule(
+                                          day: day,
+                                          index: index,
+                                        ),
+                                      );
+                                      showActions = false;
+                                    },
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                },
+              ),
+            );
+          }
+          if (state is ScheduleError) {
+            return Text('Помилка: ${state.message}');
+          }
+          return const Center(
+            child: Text(
+              "There is Noting",
+              style: TextStyle(color: Colors.white),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -199,6 +223,7 @@ class _ListScheduleWidgetState extends State<ListScheduleWidget> {
                           index: index,
                         ),
                       );
+                      Navigator.pop(context);
                     }
                   },
                   child: Text("Press"),

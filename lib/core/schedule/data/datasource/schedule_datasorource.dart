@@ -3,7 +3,7 @@ import 'package:remind/core/schedule/data/model/schedule_model.dart';
 
 abstract class ScheduleDatasorource {
   Future<void> add(ScheduleModel scheduleModel, String day);
-  Future<void> delete(String day);
+  Future<void> delete(String day, int index);
   Future<void> edit(String description, int index, String day);
   Future<void> canceled(String reason, int index, String day);
   Future<String> complete(String day, int index);
@@ -36,24 +36,42 @@ class ScheduleImplementedDatasource implements ScheduleDatasorource {
             ?.map((e) => ScheduleModel.fromMap(e as Map<String, dynamic>))
             .toList() ??
         [];
-    final updatedList =
-        dayLists.map((schedule) {
-              if (schedule.index == index) {
-                return schedule.copyWith(reason: reason);
-              }
-              return schedule;
-            }).toList()
-            as List<ScheduleModel>;
-
+    final time = await complete(day, index);
+    print(time);
+    final updatedList = dayLists.map((schedule) {
+      if (schedule.index == index) {
+        return schedule.copyWith(reason: reason, time: time);
+      }
+      return schedule;
+    }).toList();
+    print("ADDED REASON");
+    print(updatedList);
     await docRef.set({
       'schedule': updatedList.map((s) => s.toMap()).toList(),
     }, SetOptions(merge: true));
   }
 
   @override
-  Future<void> delete(String day) async {
+  Future<void> delete(String day, int index) async {
     final firestore = FirebaseFirestore.instance;
-    await firestore.collection('days').doc(day).delete();
+    final doc = firestore.collection('days').doc(day);
+    final getDay = await doc.get();
+    final dayMap = getDay.data();
+    final dayLists =
+        (dayMap?['schedule'] as List<dynamic>?)
+            ?.map((e) => ScheduleModel.fromMap(e as Map<String, dynamic>))
+            .toList() ??
+        [];
+    final newListSchedule = dayLists
+        .where((schedule) => schedule.index != index)
+        .toList(); 
+    final updatedSchedule = <ScheduleModel>[
+  for (int i = 0; i < newListSchedule.length; i++)
+    newListSchedule[i].copyWith(index: i),
+];
+    await doc.set({
+      'schedule': updatedSchedule.map((s) => s.toMap()).toList(),
+    }, SetOptions(merge: true));
   }
 
   @override
@@ -67,14 +85,12 @@ class ScheduleImplementedDatasource implements ScheduleDatasorource {
             ?.map((e) => ScheduleModel.fromMap(e as Map<String, dynamic>))
             .toList() ??
         [];
-    final updatedList =
-        dayLists.map((schedule) {
-              if (schedule.index == index) {
-                return schedule.copyWith(description: description);
-              }
-              return schedule;
-            }).toList()
-            as List<ScheduleModel>;
+    final updatedList = dayLists.map((schedule) {
+      if (schedule.index == index) {
+        return schedule.copyWith(description: description);
+      }
+      return schedule;
+    }).toList();
 
     await docRef.set({
       'schedule': updatedList.map((s) => s.toMap()).toList(),
@@ -108,17 +124,19 @@ class ScheduleImplementedDatasource implements ScheduleDatasorource {
             ?.map((e) => ScheduleModel.fromMap(e as Map<String, dynamic>))
             .toList() ??
         [];
+    print("INDEX: $index");
+    print("LIST TYPE : $dayLists");
     // final previousSchedule = dayLists[--index];
     if (index > 0) {
       final previousSchedule = dayLists[index - 1];
       final schedule = dayLists[index];
-      final fifi = schedule.time==null|| schedule.time!.isNotEmpty;
+      final fifi = schedule.time == null || schedule.time!.isNotEmpty;
       final previousNotDone =
           previousSchedule.time == null || previousSchedule.time!.isEmpty;
       if (previousNotDone) {
         throw Exception("You did not finish the previous one");
       }
-      if(fifi){
+      if (fifi) {
         throw Exception("You already end it ");
       }
     }
@@ -142,15 +160,14 @@ class ScheduleImplementedDatasource implements ScheduleDatasorource {
     }
     final String time =
         "${hour.toString().padLeft(2, '0')}:${minute.toString().padLeft(2, '0')}";
-    final updatedList =
-        dayLists.map((schedule) {
-              if (schedule.index == index) {
-                return schedule.copyWith(time: time);
-              }
-              return schedule;
-            }).toList()
-            as List<ScheduleModel>;
-
+    print(time);
+    final updatedList = dayLists.map((schedule) {
+      if (schedule.index == index) {
+        return schedule.copyWith(time: time);
+      }
+      return schedule;
+    }).toList();
+    print(updatedList);
     await docRef.set({
       'schedule': updatedList.map((s) => s.toMap()).toList(),
     }, SetOptions(merge: true));

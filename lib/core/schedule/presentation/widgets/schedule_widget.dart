@@ -132,21 +132,34 @@ class _ScheduleWidgetState extends State<ScheduleWidget> {
                         border: Border.all(color: Colors.white, width: 2),
                         borderRadius: BorderRadius.all(Radius.circular(16)),
                       ),
-                      child: Stack(
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         children: [
-                          Positioned(
-                            left: 0,
+                          Expanded(
                             child: widget.scheduleEntity.reason == null
                                 ? TextWidget(text: text)
-                                : Row(children: [TextWidget(text: text), Text(widget.scheduleEntity.reason!, style: TextStyle(color: Colors.red.shade200),)]),
+                                : Row(
+                                    mainAxisSize: MainAxisSize.min,
+                                    children: [
+                                      Flexible(child: TextWidget(text: text)),
+                                      const SizedBox(width: 6),
+                                      Flexible(
+                                        child: Text(
+                                          widget.scheduleEntity.reason!,
+                                          style: TextStyle(
+                                            color: Colors.red.shade200,
+                                          ),
+                                        ),
+                                      ),
+                                    ],
+                                  ),
                           ),
-                          Positioned(
-                            child: Text(
-                              widget.scheduleEntity.time ?? "",
-                              style: GoogleFonts.roboto(
-                                color: Colors.white,
-                                fontSize: 12,
-                              ),
+                          Text(
+                            widget.scheduleEntity.time ?? "",
+                            style: GoogleFonts.roboto(
+                              color: Colors.white,
+                              fontSize: 12,
                             ),
                           ),
                         ],
