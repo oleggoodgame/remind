@@ -9,11 +9,28 @@ class ScheduleModel extends ScheduleEntity {
     required super.index,
     super.reason,
   });
+
+  @override
+  ScheduleModel copyWith({
+    int? index,
+    String? time,
+    String? description,
+    String? reason,
+  }) {
+    return ScheduleModel(
+      index: index ?? this.index,
+      time: time ?? this.time,
+      description: description ?? this.description,
+      reason: reason ?? this.reason,
+    );
+  }
+
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'time': time,
       'description': description,
       'index': index,
+      'reason': reason,
     };
   }
 
@@ -22,7 +39,7 @@ class ScheduleModel extends ScheduleEntity {
       time: map['time'] as String,
       description: map['description'] as String,
       index: map['index'] as int,
-      // reason: map['reason'] as String,
+      reason: map['reason'] as String?,
     );
   }
 
