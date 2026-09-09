@@ -8,6 +8,7 @@ abstract class ScheduleDatasorource {
   Future<void> canceled(String reason, int index, String day);
   Future<String> complete(String day, int index);
   Future<List<ScheduleModel>> load(String day);
+  // Future<ScheduleModel> loadOne(String day);
 }
 
 class ScheduleImplementedDatasource implements ScheduleDatasorource {
@@ -64,11 +65,11 @@ class ScheduleImplementedDatasource implements ScheduleDatasorource {
         [];
     final newListSchedule = dayLists
         .where((schedule) => schedule.index != index)
-        .toList(); 
+        .toList();
     final updatedSchedule = <ScheduleModel>[
-  for (int i = 0; i < newListSchedule.length; i++)
-    newListSchedule[i].copyWith(index: i),
-];
+      for (int i = 0; i < newListSchedule.length; i++)
+        newListSchedule[i].copyWith(index: i),
+    ];
     await doc.set({
       'schedule': updatedSchedule.map((s) => s.toMap()).toList(),
     }, SetOptions(merge: true));

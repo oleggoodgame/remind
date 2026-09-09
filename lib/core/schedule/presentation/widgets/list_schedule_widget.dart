@@ -46,7 +46,14 @@ class _ListScheduleWidgetState extends State<ListScheduleWidget> {
                   final day = weekState is WeekLoaded
                       ? weekState.selectedDay.toString()
                       : DateTime.now().toString();
-
+                  if (state.schedules.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        "There is Noting",
+                        style: TextStyle(color: Colors.white),
+                      ),
+                    );
+                  }
                   return GestureDetector(
                     onHorizontalDragEnd: (details) {
                       if (details.velocity.pixelsPerSecond.dx < 0) {
@@ -164,12 +171,7 @@ class _ListScheduleWidgetState extends State<ListScheduleWidget> {
           if (state is ScheduleError) {
             return Text('Помилка: ${state.message}');
           }
-          return const Center(
-            child: Text(
-              "There is Noting",
-              style: TextStyle(color: Colors.white),
-            ),
-          );
+          return CircularProgressIndicator();
         },
       ),
     );
@@ -236,3 +238,56 @@ class _ListScheduleWidgetState extends State<ListScheduleWidget> {
     );
   }
 }
+// Padding(
+//                       padding: const EdgeInsetsGeometry.symmetric(
+//                         vertical: 16,
+//                         horizontal: 20,
+//                       ),
+//                       child: SizedBox(
+//                         width: widgetsCount.toDouble() * 80,
+//                         child: Row(
+//                           mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+//                           children: [
+//                             CircleButtonWidget(
+//                               color: Colors.redAccent.shade400,
+//                               icon: Icons.delete,
+//                               onPressed: () {
+//                                 context.read<ScheduleBloc>().add(
+//                                   DeleteShedule(day: day, index: index),
+//                                 );
+//                               },
+//                             ),
+//                             CircleButtonWidget(
+//                               color: Colors.redAccent.shade100,
+//                               icon: Icons.remove,
+//                               onPressed: () {
+//                                 _showDialog(
+//                                   context,
+//                                   "Why u didin't do it?",
+//                                   day,
+//                                   index,
+//                                 );
+//                               },
+//                             ),
+//                             CircleButtonWidget(
+//                               color: Colors.grey,
+//                               icon: Icons.edit,
+//                               onPressed: () {
+//                                 context.read<ScheduleBloc>().add(
+//                                   StartEditing(index: schedule.index),
+//                                 );
+//                               },
+//                             ),
+//                             CircleButtonWidget(
+//                               color: Colors.green.shade400,
+//                               icon: Icons.check,
+//                               onPressed: () {
+//                                 context.read<ScheduleBloc>().add(
+//                                   CompleteSchedule(day: day, index: index),
+//                                 );
+//                               },
+//                             ),
+//                           ],
+//                         ),
+//                       ),
+//                     ),

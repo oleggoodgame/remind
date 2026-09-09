@@ -21,6 +21,8 @@ dependencies:
   flutter_screenutil: ^5.9.3
   intl: ^0.20.3
   flutter_slidable: ^4.0.3
+  provider: ^6.1.5+1
+  http: ^1.6.0
 
 dev_dependencies:
   flutter_test:

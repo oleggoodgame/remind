@@ -17,7 +17,7 @@ class WeekWidget extends StatelessWidget {
           return const Center(child: CircularProgressIndicator());
         }
         if (state is WeekError) {
-          return const Text('Помилка завантаження тижня');
+          return const Text('Eror in loading');
         }
 
         final loaded = state as WeekLoaded;
